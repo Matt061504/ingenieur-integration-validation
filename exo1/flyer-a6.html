@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flyer A6 — Ingénieur I&V</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 32px 16px;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .page {
+    width: 105mm;
+    min-height: 148mm;
+    background: #0f172a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(52,211,153,0.2);
+  }
+
+  /* ── HERO IMAGE ── */
+  .hero {
+    position: relative;
+    height: 105px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .hero img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 40%;
+    display: block;
+    filter: brightness(0.45) saturate(0.8);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(7,12,16,0.1) 0%,
+      rgba(7,12,16,0.55) 60%,
+      rgba(7,12,16,0.98) 100%
+    );
+  }
+  /* bande latérale émeraude */
+  .hero::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #34d399, #059669);
+    z-index: 3;
+  }
+
+  .hero-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 0 14px 12px;
+    z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: #34d399; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: inline-block; width: 18px; height: 1.5px; background: #34d399;
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 800; line-height: 1.1; color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .hero-title em {
+    font-style: normal; color: #34d399;
+  }
+  .hero-sub {
+    font-size: 8px; color: rgba(255,255,255,0.55); margin-top: 5px; letter-spacing: 0.4px;
+    font-weight: 500;
+  }
+
+  /* ── BADGES ROW ── */
+  .badges {
+    background: #0d1a20;
+    border-top: 2px solid #34d399;
+    border-bottom: 1px solid rgba(52,211,153,0.15);
+    padding: 6px 14px;
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+  .bdg {
+    font-size: 7.5px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+    letter-spacing: 0.2px;
+  }
+  .bdg-g  { background: #064e3b; color: #6ee7b7; border: 1px solid #34d399; }
+  .bdg-a  { background: #451a03; color: #fcd34d; border: 1px solid #fbbf24; }
+  .bdg-i  { background: #1e1b4b; color: #c7d2fe; border: 1px solid #818cf8; }
+
+  /* ── CORPS ── */
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Bloc coloré style référence */
+  .section {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .section-head {
+    padding: 5px 14px 4px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .section-head .ico { font-size: 13px; line-height: 1; }
+  .section-head .ttl {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.2px; text-transform: uppercase;
+    color: #ffffff;
+  }
+  .section-body { padding: 5px 14px 8px; }
+
+  /* couleurs de section */
+  .sec-green .section-head { background: #065f46; }
+  .sec-amber .section-head { background: #78350f; }
+  .sec-indigo .section-head { background: #312e81; }
+  .sec-slate .section-head  { background: #1e293b; border-bottom: 1px solid rgba(52,211,153,0.2); }
+
+  .sec-green  { background: #0d1a14; }
+  .sec-amber  { background: #1a130a; }
+  .sec-indigo { background: #110d2e; }
+  .sec-slate  { background: #0f1923; }
+
+  /* ── TEXTE CONTENU ── */
+  .desc {
+    font-size: 8.5px; color: rgba(220,240,230,0.85); line-height: 1.65;
+  }
+  .desc strong { color: #6ee7b7; font-weight: 700; }
+
+  /* ── TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 3px; }
+  .tag {
+    font-size: 7.5px; font-weight: 600; padding: 2px 7px; border-radius: 100px;
+  }
+  .tag-g { background: rgba(52,211,153,0.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
+  .tag-a { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.3); }
+  .tag-i { background: rgba(129,140,248,0.12); color: #c7d2fe; border: 1px solid rgba(129,140,248,0.3); }
+  .tag-r { background: rgba(248,113,113,0.1);  color: #fca5a5; border: 1px solid rgba(248,113,113,0.25); }
+
+  /* ── BARRES SALAIRE ── */
+  .sal-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .sal-label { font-size: 7.5px; color: rgba(200,230,215,0.7); width: 74px; flex-shrink: 0; font-weight: 500; }
+  .sal-bar-bg { flex: 1; height: 5px; border-radius: 10px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .sal-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #34d399, #818cf8); }
+  .sal-val { font-size: 7.5px; font-weight: 700; color: #6ee7b7; width: 48px; text-align: right; flex-shrink: 0; }
+
+  /* ── GRID 2 COLS ── */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+
+  /* Évolution mini */
+  .ev-item { display: flex; align-items: flex-start; gap: 5px; margin-bottom: 3px; }
+  .ev-num {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px; font-weight: 700;
+  }
+  .ev-g { background: rgba(52,211,153,0.2); color: #6ee7b7; border: 1px solid #34d399; }
+  .ev-a { background: rgba(251,191,36,0.2); color: #fcd34d; border: 1px solid #fbbf24; }
+  .ev-txt strong { font-size: 8px; color: #e2ece8; display: block; font-weight: 600; }
+  .ev-txt span   { font-size: 7px; color: rgba(180,210,195,0.6); }
+
+  /* Secteurs mini */
+  .sector { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .sector span { font-size: 7.5px; color: rgba(210,235,220,0.8); font-weight: 500; }
+
+  /* ── QR SECTION ── */
+  .qr-section {
+    background: #070c10;
+    border-top: 2px solid #34d399;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 12px;
+    flex-shrink: 0;
+  }
+  .qr-wrap {
+    background: #ffffff; border-radius: 8px; padding: 5px; flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(52,211,153,0.3);
+  }
+  .qr-wrap img { width: 56px; height: 56px; display: block; border-radius: 3px; }
+
+  .qr-right {}
+  .qr-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #34d399; margin-bottom: 3px;
+  }
+  .qr-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 800; color: #ffffff; line-height: 1.2; margin-bottom: 3px;
+  }
+  .qr-url { font-size: 8px; color: #6ee7b7; font-weight: 700; }
+  .qr-sub { font-size: 7px; color: rgba(180,210,195,0.55); margin-top: 2px; }
+
+  /* ── PRINT ── */
+  @media print {
+    @page { size: A6 portrait; margin: 0; }
+    body { background: transparent; padding: 0; display: block; }
+    .page { box-shadow: none; width: 105mm; min-height: 148mm; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <!-- Photo circuit électronique / test avionique — Unsplash (libre de droits) -->
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=420&q=85"
+         alt="Électronique embarquée">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Métier d'ingénieur</div>
+      <div class="hero-title">Ingénieur<br><em>Intégration &amp; Validation</em></div>
+      <div class="hero-sub">IVVQ · Systèmes embarqués · Aéronautique · Défense</div>
+    </div>
+  </div>
+
+  <!-- ── BADGES ── -->
+  <div class="badges">
+    <span class="bdg bdg-g">✓ Statut CADRE</span>
+    <span class="bdg bdg-a">33 – 90k€ / an</span>
+    <span class="bdg bdg-i">Bac +5 requis</span>
+  </div>
+
+  <!-- ── CORPS ── -->
+  <div class="body">
+
+    <!-- Description -->
+    <div class="section sec-green">
+      <div class="section-head"><span class="ico">🔬</span><span class="ttl">Le Métier</span></div>
+      <div class="section-body">
+        <p class="desc">Assure l'<strong>intégration</strong> des composants HW &amp; SW, puis <strong>vérifie et valide</strong> leur conformité aux exigences. Verrou qualité indispensable avant livraison dans les secteurs critiques.</p>
+      </div>
+    </div>
+
+    <!-- Compétences + Secteurs -->
+    <div class="section sec-indigo">
+      <div class="section-head"><span class="ico">⚙️</span><span class="ttl">Compétences &amp; Secteurs</span></div>
+      <div class="section-body">
+        <div class="two">
+          <div>
+            <div class="tags">
+              <span class="tag tag-g">Python</span>
+              <span class="tag tag-g">C/C++</span>
+              <span class="tag tag-g">Git</span>
+              <span class="tag tag-g">Jenkins</span>
+              <span class="tag tag-i">ISTQB</span>
+              <span class="tag tag-a">DO-178C</span>
+              <span class="tag tag-a">ISO 26262</span>
+            </div>
+          </div>
+          <div>
+            <div class="sector"><span class="dot" style="background:#34d399"></span><span>Aéronautique</span></div>
+            <div class="sector"><span class="dot" style="background:#f87171"></span><span>Défense</span></div>
+            <div class="sector"><span class="dot" style="background:#818cf8"></span><span>Automobile</span></div>
+            <div class="sector"><span class="dot" style="background:#fbbf24"></span><span>Spatial</span></div>
+            <div class="sector"><span class="dot" style="background:#34d399"></span><span>Ferroviaire</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salaires -->
+    <div class="section sec-amber">
+      <div class="section-head"><span class="ico">💰</span><span class="ttl">Rémunération</span></div>
+      <div class="section-body">
+        <div class="sal-row">
+          <span class="sal-label">Junior 0–3 ans</span>
+          <div class="sal-bar-bg"><div class="sal-bar" style="width:38%"></div></div>
+          <span class="sal-val">33–42k€</span>
+        </div>
+        <div class="sal-row">
+          <span class="sal-label">Confirmé 3–7 ans</span>
+          <div class="sal-bar-bg"><div class="sal-bar" style="width:58%"></div></div>
+          <span class="sal-val">42–55k€</span>
+        </div>
+        <div class="sal-row">
+          <span class="sal-label">Senior 7–15 ans</span>
+          <div class="sal-bar-bg"><div class="sal-bar" style="width:76%"></div></div>
+          <span class="sal-val">55–70k€</span>
+        </div>
+        <div class="sal-row">
+          <span class="sal-label">Expert 15 ans+</span>
+          <div class="sal-bar-bg"><div class="sal-bar" style="width:100%"></div></div>
+          <span class="sal-val">70–90k€+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Évolution + Entreprises -->
+    <div class="section sec-slate">
+      <div class="section-head"><span class="ico">🚀</span><span class="ttl">Évolution &amp; Entreprises</span></div>
+      <div class="section-body">
+        <div class="two">
+          <div>
+            <div class="ev-item">
+              <div class="ev-num ev-g">1</div>
+              <div class="ev-txt"><strong>Junior</strong><span>Tests unitaires</span></div>
+            </div>
+            <div class="ev-item">
+              <div class="ev-num ev-g">2</div>
+              <div class="ev-txt"><strong>Confirmé</strong><span>Pilotage camps.</span></div>
+            </div>
+            <div class="ev-item">
+              <div class="ev-num ev-g">3</div>
+              <div class="ev-txt"><strong>Lead I&amp;V</strong><span>Encadrement</span></div>
+            </div>
+            <div class="ev-item">
+              <div class="ev-num ev-a">★</div>
+              <div class="ev-txt"><strong>Expert / DT</strong><span>Management</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="tags" style="flex-direction:column;gap:3px;align-items:flex-start;">
+              <span class="tag tag-g" style="border-radius:5px;padding:2px 6px;">Airbus · Thales</span>
+              <span class="tag tag-g" style="border-radius:5px;padding:2px 6px;">Safran · Dassault</span>
+              <span class="tag tag-i" style="border-radius:5px;padding:2px 6px;">ALTEN · Expleo</span>
+              <span class="tag tag-i" style="border-radius:5px;padding:2px 6px;">Capgemini · SII</span>
+              <span class="tag tag-a" style="border-radius:5px;padding:2px 6px;">Alstom · Valeo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- ── QR ── -->
+  <div class="qr-section">
+    <div class="qr-wrap">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://ingenieur-integration.vercel.app/&color=070c10&bgcolor=ffffff&margin=2"
+           alt="QR">
+    </div>
+    <div class="qr-right">
+      <div class="qr-eyebrow">← Scanner pour en savoir plus</div>
+      <div class="qr-title">Poster interactif<br>en ligne</div>
+      <div class="qr-url">ingenieur-integration.vercel.app</div>
+      <div class="qr-sub">Cycle en V · Sources · Détails complets</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
