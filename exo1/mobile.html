@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ingénieur I&V — Mobile</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080d18;
+    --surface: #0f1729;
+    --surface2: #1a2440;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #a855f7;
+    --accent4: #4ade80;
+    --text: #f0f6ff;
+    --muted: #7a8baa;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ── AMBIENT ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 40% at 20% 0%, rgba(0,212,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(168,85,247,0.06) 0%, transparent 60%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    padding: 32px 20px 24px;
+    background: linear-gradient(160deg, rgba(0,212,255,0.1) 0%, rgba(168,85,247,0.06) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.25);
+    color: var(--accent);
+    font-size: 10px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 30px; font-weight: 700; line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pill-green  { border-color: rgba(74,222,128,0.3);  color: var(--accent4); background: rgba(74,222,128,0.07); }
+  .pill-blue   { border-color: rgba(0,212,255,0.3);   color: var(--accent);  background: rgba(0,212,255,0.07); }
+  .pill-purple { border-color: rgba(168,85,247,0.3);  color: var(--accent3); background: rgba(168,85,247,0.07); }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(9,13,24,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 8px 4px 10px;
+    safe-area-inset-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 3px;
+    cursor: pointer;
+    padding: 4px 2px;
+    border-radius: 10px;
+    transition: background 0.15s;
+    border: none; background: none; color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item.active { color: var(--accent); }
+  .nav-item:active { background: rgba(255,255,255,0.05); }
+  .nav-icon { font-size: 20px; line-height: 1; }
+  .nav-label { font-size: 9px; font-weight: 500; letter-spacing: 0.3px; }
+
+  /* ── SECTIONS ── */
+  .section-page {
+    display: none;
+    position: relative; z-index: 1;
+    padding: 16px 16px 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  .section-page.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── ACCORDION CARD ── */
+  .acc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .acc-card.open { border-color: rgba(0,212,255,0.2); }
+
+  .acc-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .acc-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .icon-blue   { background: rgba(0,212,255,0.12); }
+  .icon-orange { background: rgba(255,107,53,0.12); }
+  .icon-purple { background: rgba(168,85,247,0.12); }
+  .icon-green  { background: rgba(74,222,128,0.12); }
+  .icon-yellow { background: rgba(250,204,21,0.12); }
+
+  .acc-title { flex: 1; }
+  .acc-title h3 { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .acc-title p  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .acc-arrow {
+    font-size: 14px; color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .acc-card.open .acc-arrow { transform: rotate(180deg); color: var(--accent); }
+
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s;
+    padding: 0 16px;
+  }
+  .acc-card.open .acc-body {
+    max-height: 1200px;
+    padding: 0 16px 16px;
+  }
+
+  .acc-card:not(.open) .acc-header { border-bottom: none; }
+  .acc-card.open .acc-header { border-bottom: 1px solid var(--border); }
+
+  /* colored top border on open */
+  .acc-card.blue-card  { border-top: 3px solid var(--accent); }
+  .acc-card.orange-card{ border-top: 3px solid var(--accent2); }
+  .acc-card.purple-card{ border-top: 3px solid var(--accent3); }
+  .acc-card.green-card { border-top: 3px solid var(--accent4); }
+  .acc-card.yellow-card{ border-top: 3px solid #facc15; }
+
+  /* ── INNER CONTENT STYLES ── */
+  .body-text { font-size: 13px; color: rgba(240,246,255,0.75); line-height: 1.7; margin-top: 12px; }
+
+  ul.list { list-style: none; margin-top: 10px; }
+  ul.list li {
+    font-size: 13px; color: rgba(240,246,255,0.75);
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+  }
+  ul.list li:last-child { border-bottom: none; }
+  ul.list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+  ul.list.orange li::before { background: var(--accent2); }
+  ul.list.purple li::before { background: var(--accent3); }
+  ul.list.green  li::before { background: var(--accent4); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .tag {
+    font-size: 11px; padding: 4px 11px;
+    border-radius: 100px; border: 1px solid var(--border); color: var(--muted);
+  }
+  .tag-blue   { border-color:rgba(0,212,255,0.3);  color:var(--accent);  background:rgba(0,212,255,0.07);  }
+  .tag-orange { border-color:rgba(255,107,53,0.3); color:var(--accent2); background:rgba(255,107,53,0.07); }
+  .tag-purple { border-color:rgba(168,85,247,0.3); color:var(--accent3); background:rgba(168,85,247,0.07); }
+  .tag-green  { border-color:rgba(74,222,128,0.3); color:var(--accent4); background:rgba(74,222,128,0.07); }
+
+  /* stat row */
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .stat-box {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px; text-align: center;
+  }
+  .stat-box .v { display: block; font-size: 22px; font-weight: 900; font-family: 'Space Grotesk', sans-serif; color: var(--accent); line-height: 1; }
+  .stat-box .l { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* salary bars */
+  .sal-row { margin-bottom: 12px; margin-top: 12px; }
+  .sal-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .sal-label span:last-child { color: var(--text); font-weight: 700; }
+  .bar-bg { background: rgba(255,255,255,0.06); height: 7px; border-radius: 10px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent3)); }
+
+  /* timeline */
+  .tl { margin-top: 12px; }
+  .tl-row { display: flex; gap: 12px; padding: 8px 0; position: relative; }
+  .tl-row:not(:last-child)::after {
+    content: ''; position: absolute; left: 14px; top: 34px;
+    width: 2px; height: calc(100% - 8px); background: var(--border);
+  }
+  .tl-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--surface2); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--accent);
+    flex-shrink: 0; z-index: 1; position: relative;
+  }
+  .tl-text { padding-top: 4px; }
+  .tl-text strong { font-size: 13px; display: block; margin-bottom: 2px; }
+  .tl-text span { font-size: 11px; color: var(--muted); }
+
+  /* sector grid */
+  .sector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .sector-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 9px 12px;
+    font-size: 12px; display: flex; align-items: center; gap: 7px;
+  }
+  .s-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* logo grid */
+  .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .logo-item {
+    background: white; border-radius: 10px; padding: 8px 4px 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .logo-item img { width: 100%; max-width: 60px; max-height: 28px; object-fit: contain; }
+  .logo-item span { font-size: 9px; color: #444; font-weight: 600; text-align: center; }
+
+  /* ODD cards */
+  .odd-card {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border); margin-bottom: 10px;
+  }
+  .odd-head {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  }
+  .odd-num {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .odd-body { padding: 0 14px 12px; font-size: 12px; color: rgba(240,246,255,0.7); line-height: 1.65; }
+
+  /* cycle V mini */
+  .cycle-step {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .cycle-step:last-child { border-bottom: none; }
+  .cycle-badge {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; background: var(--surface2); border: 1px solid var(--border);
+  }
+  .cycle-step-info strong { font-size: 13px; display: block; margin-bottom: 3px; }
+  .cycle-step-info span { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+  .cycle-step-info .ivv-tag {
+    display: inline-block; margin-top: 5px;
+    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25);
+    border-radius: 100px; padding: 2px 9px; font-size: 10px; color: var(--accent); font-weight: 600;
+  }
+
+  /* section title inside body */
+  .sub-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin: 14px 0 8px;
+  }
+
+  /* quote */
+  .quote {
+    background: rgba(0,212,255,0.05); border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0; padding: 10px 14px;
+    font-style: italic; font-size: 12px; color: rgba(240,246,255,0.75);
+    line-height: 1.6; margin-top: 12px;
+  }
+
+  /* trend item */
+  .trend-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px; margin-bottom: 8px;
+  }
+  .trend-arrow { color: var(--accent4); font-size: 16px; font-weight: 700; }
+  .trend-item strong { font-size: 13px; display: block; margin: 4px 0 3px; }
+  .trend-item span { font-size: 11.5px; color: var(--muted); }
+
+  /* QR section */
+  .qr-block {
+    background: var(--surface2); border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 16px; padding: 20px; text-align: center; margin-top: 16px;
+  }
+  .qr-block img { border-radius: 8px; margin-bottom: 10px; }
+  .qr-block p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .qr-block a { color: var(--accent); font-weight: 600; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Forum des Métiers · CESI A3 · 2025</div>
+  <h1>Ingénieur<br><span>Intégration &<br>Validation</span></h1>
+  <p class="hero-sub">Le garant de la qualité technique des systèmes complexes — présent à chaque étape du cycle de développement.</p>
+  <div class="hero-pills">
+    <div class="pill pill-green">✓ Statut Cadre</div>
+    <div class="pill pill-blue">Bac+5</div>
+    <div class="pill pill-blue">33–90k€/an</div>
+    <div class="pill pill-purple">1000+ offres</div>
+  </div>
+</div>
+
+<!-- PAGES -->
+<div id="page-metier" class="section-page active">
+
+  <!-- Description -->
+  <div class="acc-card blue-card open" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">🔬</div>
+      <div class="acc-title"><h3>Description du métier</h3><p>En quoi consiste le poste ?</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <p class="body-text">L'ingénieur I&V intègre les composants matériels et logiciels d'un système, puis <strong>vérifie et valide leur conformité</strong> aux spécifications avant livraison au client.</p>
+      <ul class="list">
+        <li>Définir la stratégie et le plan d'intégration</li>
+        <li>Rédiger et exécuter les scénarios de tests</li>
+        <li>Analyser les anomalies et non-conformités</li>
+        <li>Rédiger les rapports de qualification</li>
+        <li>Présenter les résultats au client (SAT/FAT)</li>
+      </ul>
+      <div class="quote">"Un système qui n'est pas validé ne peut pas être livré — dans l'aéronautique, il ne peut même pas voler."</div>
+    </div>
+  </div>
+
+  <!-- Rôle -->
+  <div class="acc-card purple-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-purple">🌐</div>
+      <div class="acc-title"><h3>Rôle dans la société</h3><p>Valeur ajoutée et impact</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <p class="body-text">Verrou qualité obligatoire dans les secteurs critiques. Un défaut non détecté peut coûter des vies ou des milliards.</p>
+      <ul class="list purple">
+        <li>Certifie les systèmes avioniques (EASA/FAA)</li>
+        <li>Valide les airbags & systèmes ADAS</li>
+        <li>Garantit la sûreté nucléaire (SIL4)</li>
+        <li>Valide les dispositifs médicaux (IEC 62304)</li>
+        <li>Réduit les coûts de non-qualité ×10 à ×100</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Responsabilité -->
+  <div class="acc-card green-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-green">⚖️</div>
+      <div class="acc-title"><h3>Responsabilité</h3><p>Niveau, effectifs, budget</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="stat-row">
+        <div class="stat-box"><span class="v" style="color:var(--accent4)">N+2</span><span class="l">Niveau junior</span></div>
+        <div class="stat-box"><span class="v">Lead</span><span class="l">Niveau senior</span></div>
+        <div class="stat-box"><span class="v" style="color:var(--accent2)">2–10</span><span class="l">Effectifs managés</span></div>
+        <div class="stat-box"><span class="v" style="color:var(--accent3);font-size:16px;">Variable</span><span class="l">Budget</span></div>
+      </div>
+      <p class="body-text" style="margin-top:12px;">
+        <strong style="color:var(--text)">Junior :</strong> pas de budget direct.<br>
+        <strong style="color:var(--text)">Confirmé :</strong> budget outillage banc (~10–100k€).<br>
+        <strong style="color:var(--text)">Lead :</strong> budget test programme (centaines de k€).
+      </p>
+    </div>
+  </div>
+
+  <!-- Statut cadre -->
+  <div class="acc-card green-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-green">🎖️</div>
+      <div class="acc-title"><h3>Statut Cadre</h3><p>Classification professionnelle</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:14px;margin-top:12px;text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:var(--accent4);font-family:'Space Grotesk',sans-serif;">✓ CADRE</div>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6;">Indexé APEC · Bac+5 requis · Grille de classification cadres de la métallurgie ou de l'informatique selon le secteur.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="page-competences" class="section-page">
+
+  <!-- Compétences tech -->
+  <div class="acc-card blue-card open" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">💻</div>
+      <div class="acc-title"><h3>Compétences techniques</h3><p>Stack & outils</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="sub-title">Langages & outils</div>
+      <div class="tags">
+        <span class="tag tag-blue">Python</span>
+        <span class="tag tag-blue">C / C++</span>
+        <span class="tag tag-blue">Robot Framework</span>
+        <span class="tag tag-blue">Jenkins / CI-CD</span>
+        <span class="tag tag-blue">Git</span>
+        <span class="tag tag-blue">IBM DOORS</span>
+        <span class="tag tag-blue">JIRA / TestRail</span>
+        <span class="tag tag-blue">MATLAB/Simulink</span>
+        <span class="tag tag-blue">Linux embarqué</span>
+        <span class="tag tag-blue">Docker</span>
+        <span class="tag tag-blue">SysML / UML</span>
+      </div>
+      <div class="sub-title">Normes & certifications</div>
+      <div class="tags">
+        <span class="tag tag-orange">ISTQB Foundation</span>
+        <span class="tag tag-orange">DO-178C (Avionique)</span>
+        <span class="tag tag-orange">ISO 26262 (Auto)</span>
+        <span class="tag tag-orange">ECSS (Spatial)</span>
+        <span class="tag tag-orange">EN 50128 (Ferro)</span>
+        <span class="tag tag-orange">IEC 61508</span>
+        <span class="tag tag-orange">IEC 62304 (Médical)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Qualités -->
+  <div class="acc-card orange-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-orange">🧠</div>
+      <div class="acc-title"><h3>Qualités individuelles</h3><p>Soft skills recherchés</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <ul class="list orange">
+        <li>Rigueur absolue & méthode irréprochable</li>
+        <li>Esprit d'analyse et de synthèse</li>
+        <li>Autonomie dans la gestion des campagnes</li>
+        <li>Capacité à argumenter une non-conformité</li>
+        <li>Curiosité technique & veille permanente</li>
+        <li>Organisation & gestion multi-projets</li>
+        <li>Esprit critique, ténacité sur les défauts</li>
+        <li>Aisance relationnelle (dev, PM, client)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Études -->
+  <div class="acc-card green-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-green">🎓</div>
+      <div class="acc-title"><h3>Études requises</h3><p>Bac+5 obligatoire</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="sub-title">Écoles d'ingénieurs</div>
+      <ul class="list green">
+        <li>ESIGELEC, ENSEEIHT, INSA</li>
+        <li>École Centrale, Polytech</li>
+        <li>ISAE-SUPAERO (aéro/spatial)</li>
+        <li>ENSIMAG (informatique/embarqué)</li>
+        <li>CESI École d'Ingénieurs ✓</li>
+      </ul>
+      <div class="sub-title">Masters universitaires</div>
+      <ul class="list green">
+        <li>Master Informatique (parcours embarqué)</li>
+        <li>Master Électronique / Systèmes</li>
+        <li>Master Génie Électrique & Automatique</li>
+        <li>Master Qualité & Sûreté de fonctionnement</li>
+      </ul>
+      <div class="quote">💡 <strong>Alternance valorisée</strong> — exposition aux environnements industriels réels dès l'école.</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="page-marche" class="section-page">
+
+  <!-- Salaires -->
+  <div class="acc-card purple-card open" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-purple">💰</div>
+      <div class="acc-title"><h3>Rémunération</h3><p>France 2024–2025</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="sal-row">
+        <div class="sal-label"><span>Junior (0–3 ans)</span><span>33–42k€</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:40%"></div></div>
+      </div>
+      <div class="sal-row">
+        <div class="sal-label"><span>Confirmé (3–7 ans)</span><span>42–55k€</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:58%"></div></div>
+      </div>
+      <div class="sal-row">
+        <div class="sal-label"><span>Senior (7–15 ans)</span><span>55–70k€</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:78%"></div></div>
+      </div>
+      <div class="sal-row">
+        <div class="sal-label"><span>Expert / Lead (15 ans+)</span><span>70–90k€+</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+      </div>
+      <p class="body-text" style="font-size:11px;">Médiane : ~41k€ · +15% en Île-de-France · +10% défense/spatial</p>
+    </div>
+  </div>
+
+  <!-- Évolution -->
+  <div class="acc-card blue-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">📈</div>
+      <div class="acc-title"><h3>Évolution de carrière</h3><p>4 trajectoires possibles</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-dot">1</div>
+          <div class="tl-text"><strong>I&V Junior</strong><span>0–3 ans · exécution des tests</span></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot">2</div>
+          <div class="tl-text"><strong>I&V Confirmé / Senior</strong><span>3–10 ans · pilotage campagnes</span></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot">3</div>
+          <div class="tl-text"><strong>Lead I&V / Chef de Projet</strong><span>7–12 ans · encadrement équipe</span></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-dot">★</div>
+          <div class="tl-text"><strong>Expert / Directeur Technique</strong><span>15 ans+ · management stratégique</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tendances -->
+  <div class="acc-card orange-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-orange">🚀</div>
+      <div class="acc-title"><h3>Tendances 2025</h3><p>Marché en transformation</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body" style="padding-top:12px;">
+      <div class="trend-item">
+        <span class="trend-arrow">↑</span>
+        <strong>Automatisation des tests</strong>
+        <span>Python & CI/CD deviennent incontournables</span>
+      </div>
+      <div class="trend-item">
+        <span class="trend-arrow">↑</span>
+        <strong>Shift-Left Testing</strong>
+        <span>L'I&V intervient dès la phase de conception</span>
+      </div>
+      <div class="trend-item">
+        <span class="trend-arrow">↑</span>
+        <strong>IA dans les tests</strong>
+        <span>Génération auto de cas de test & analyse des logs</span>
+      </div>
+      <div class="trend-item">
+        <span class="trend-arrow">↑</span>
+        <strong>Pénurie de talents</strong>
+        <span>47k diplômés/an pour 65k postes — marché favorable</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="page-entreprises" class="section-page">
+
+  <!-- Secteurs -->
+  <div class="acc-card orange-card open" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-orange">🏭</div>
+      <div class="acc-title"><h3>Secteurs d'activité</h3><p>8 secteurs recruteurs</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="sector-grid">
+        <div class="sector-item"><span class="s-dot" style="background:#00d4ff"></span>Aéronautique / Spatial</div>
+        <div class="sector-item"><span class="s-dot" style="background:#ef4444"></span>Défense</div>
+        <div class="sector-item"><span class="s-dot" style="background:#a855f7"></span>Automobile / ADAS</div>
+        <div class="sector-item"><span class="s-dot" style="background:#4ade80"></span>Ferroviaire</div>
+        <div class="sector-item"><span class="s-dot" style="background:#facc15"></span>Télécoms / IoT</div>
+        <div class="sector-item"><span class="s-dot" style="background:#ec4899"></span>Nucléaire</div>
+        <div class="sector-item"><span class="s-dot" style="background:#38bdf8"></span>Médical</div>
+        <div class="sector-item"><span class="s-dot" style="background:#fb923c"></span>Énergie</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entreprises -->
+  <div class="acc-card blue-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">🏢</div>
+      <div class="acc-title"><h3>Types d'entreprises</h3><p>Grands groupes, ESN & PME</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="sub-title">Donneurs d'ordre</div>
+      <div class="logo-grid">
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Airbus_Logo_2017.svg/250px-Airbus_Logo_2017.svg.png" alt="Airbus" onerror="this.style.display='none'"><span>Airbus</span></div>
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Thales_Logo.svg/250px-Thales_Logo.svg.png" alt="Thales" onerror="this.style.display='none'"><span>Thales</span></div>
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Safran_logo.svg/250px-Safran_logo.svg.png" alt="Safran" onerror="this.style.display='none'"><span>Safran</span></div>
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Dassault_Aviation_logo.svg/250px-Dassault_Aviation_logo.svg.png" alt="Dassault" onerror="this.style.display='none'"><span>Dassault</span></div>
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Alstom_logo.svg/250px-Alstom_logo.svg.png" alt="Alstom" onerror="this.style.display='none'"><span>Alstom</span></div>
+        <div class="logo-item"><img src="https://www.valeo.com/wp-content/uploads/2025/11/logo-valeo-signature-2025_210x110.png" alt="Valeo" onerror="this.style.display='none'"><span>Valeo</span></div>
+      </div>
+      <div class="sub-title">ESN / Ingénierie</div>
+      <div class="logo-grid">
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/ALTEN-Logo.svg/langfr-250px-ALTEN-Logo.svg.png" alt="ALTEN" onerror="this.style.display='none'"><span>ALTEN</span></div>
+        <div class="logo-item"><img src="https://expleo.com/global/en/wp-content/uploads/2019/02/expleo-logo-and-tagline.png" alt="Expleo" onerror="this.style.display='none'"><span>Expleo</span></div>
+        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/SEGULA_Technologies_logo.svg/langfr-250px-SEGULA_Technologies_logo.svg.png" alt="Segula" onerror="this.style.display='none'"><span>Segula</span></div>
+      </div>
+      <p class="body-text" style="font-size:11px;margin-top:10px;">⚡ 40–60 % des offres passent par une ESN</p>
+    </div>
+  </div>
+
+  <!-- ODD -->
+  <div class="acc-card blue-card" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">🌍</div>
+      <div class="acc-title"><h3>Lien avec les ODD</h3><p>4 objectifs sur 17</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body" style="padding-top:12px;">
+      <div class="odd-card" style="border-top:3px solid #F36D25;">
+        <div class="odd-head">
+          <div class="odd-num" style="background:rgba(243,109,37,0.15);border:1px solid rgba(243,109,37,0.3);color:#fb923c;">9</div>
+          <strong style="color:#fb923c;font-size:12px;">Industrie, Innovation & Infrastructure</strong>
+        </div>
+        <div class="odd-body">Développement de technologies avancées et participation à l'innovation industrielle — certifie que les systèmes complexes sont fiables.</div>
+      </div>
+      <div class="odd-card" style="border-top:3px solid #FCC30B;">
+        <div class="odd-head">
+          <div class="odd-num" style="background:rgba(252,195,11,0.15);border:1px solid rgba(252,195,11,0.3);color:#fcd34d;">7</div>
+          <strong style="color:#fcd34d;font-size:12px;">Énergie propre & abordable</strong>
+        </div>
+        <div class="odd-body">Optimisation des systèmes pour réduire la consommation, validation des véhicules électriques et des systèmes d'énergie renouvelable.</div>
+      </div>
+      <div class="odd-card" style="border-top:3px solid #3F7E44;">
+        <div class="odd-head">
+          <div class="odd-num" style="background:rgba(63,126,68,0.18);border:1px solid rgba(63,126,68,0.35);color:#4ade80;">13</div>
+          <strong style="color:#4ade80;font-size:12px;">Lutte contre les changements climatiques</strong>
+        </div>
+        <div class="odd-body">Réduction des émissions via des systèmes plus efficaces — qualification de solutions de mobilité durable et d'avions bas-carbone.</div>
+      </div>
+      <div class="odd-card" style="border-top:3px solid #F99D26;">
+        <div class="odd-head">
+          <div class="odd-num" style="background:rgba(249,157,38,0.15);border:1px solid rgba(249,157,38,0.3);color:#fbbf24;">11</div>
+          <strong style="color:#fbbf24;font-size:12px;">Villes & communautés durables</strong>
+        </div>
+        <div class="odd-body">Amélioration des transports, voiture autonome, villes intelligentes — validation des infrastructures urbaines connectées.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="page-cycle" class="section-page">
+  <div class="acc-card blue-card open" onclick="toggle(this)">
+    <div class="acc-header">
+      <div class="acc-icon icon-blue">🔁</div>
+      <div class="acc-title"><h3>Le Cycle en V</h3><p>L'I&V intervient à chaque étape</p></div>
+      <span class="acc-arrow">▾</span>
+    </div>
+    <div class="acc-body" style="padding-top:12px;">
+      <div class="cycle-step">
+        <div class="cycle-badge">📋</div>
+        <div class="cycle-step-info">
+          <strong>Exigences Système</strong>
+          <span>Besoin client, cahier des charges</span>
+          <span class="ivv-tag">I&V : vérifier la testabilité des exigences</span>
+        </div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-badge">🏗️</div>
+        <div class="cycle-step-info">
+          <strong>Architecture Système</strong>
+          <span>Découpage en sous-systèmes</span>
+          <span class="ivv-tag">I&V : rédiger le plan d'intégration</span>
+        </div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-badge">✏️</div>
+        <div class="cycle-step-info">
+          <strong>Conception Détaillée</strong>
+          <span>HW, SW, interfaces</span>
+          <span class="ivv-tag">I&V : définir les cas de test unitaires</span>
+        </div>
+      </div>
+      <div class="cycle-step" style="background:rgba(255,107,53,0.05);border-radius:10px;padding:10px;margin:4px -4px;">
+        <div class="cycle-badge" style="background:rgba(255,107,53,0.12);border-color:rgba(255,107,53,0.3);">⚙️</div>
+        <div class="cycle-step-info">
+          <strong style="color:var(--accent2)">Réalisation / Codage</strong>
+          <span>Développement HW & SW</span>
+          <span class="ivv-tag" style="background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.3);color:var(--accent2);">I&V : tests unitaires sur composants</span>
+        </div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-badge">🔗</div>
+        <div class="cycle-step-info">
+          <strong>Tests d'Intégration</strong>
+          <span>Assemblage & vérification interfaces</span>
+          <span class="ivv-tag">I&V : exécuter les tests d'intégration</span>
+        </div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-badge">✅</div>
+        <div class="cycle-step-info">
+          <strong>Vérification Système</strong>
+          <span>Conformité à l'architecture définie</span>
+          <span class="ivv-tag">I&V : campagne de vérification système</span>
+        </div>
+      </div>
+      <div class="cycle-step" style="border-bottom:none;">
+        <div class="cycle-badge" style="background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3);">🏆</div>
+        <div class="cycle-step-info">
+          <strong style="color:var(--accent)">Validation & Qualification</strong>
+          <span>Conformité exigences + livraison client</span>
+          <span class="ivv-tag">I&V : qualification finale + SAT/FAT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR -->
+  <div class="qr-block">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://ingenieur-integration.vercel.app/&color=f0f6ff&bgcolor=1a2440&margin=3" alt="QR Code" width="140" height="140">
+    <p>Poster complet interactif disponible en ligne</p>
+    <a href="https://ingenieur-integration.vercel.app/" target="_blank">ingenieur-integration.vercel.app</a>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('metier', this)">
+    <span class="nav-icon">🔬</span>
+    <span class="nav-label">Métier</span>
+  </button>
+  <button class="nav-item" onclick="showPage('competences', this)">
+    <span class="nav-icon">💡</span>
+    <span class="nav-label">Compétences</span>
+  </button>
+  <button class="nav-item" onclick="showPage('marche', this)">
+    <span class="nav-icon">💰</span>
+    <span class="nav-label">Marché</span>
+  </button>
+  <button class="nav-item" onclick="showPage('entreprises', this)">
+    <span class="nav-icon">🏢</span>
+    <span class="nav-label">Entreprises</span>
+  </button>
+  <button class="nav-item" onclick="showPage('cycle', this)">
+    <span class="nav-icon">🔁</span>
+    <span class="nav-label">Cycle V</span>
+  </button>
+</nav>
+
+<script>
+  function showPage(id, btn) {
+    document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggle(card) {
+    // don't close if clicking inside body content
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
