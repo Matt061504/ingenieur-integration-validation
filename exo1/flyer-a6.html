@@ -29,12 +29,33 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.18);
   }
 
-  /* ── HEADER ── */
-  .header {
-    background: #0f172a;
-    border-left: 5px solid #34d399;
-    padding: 12px 16px 11px;
+  /* ── HERO PHOTO ── */
+  .hero {
+    position: relative;
+    height: 90px;
+    overflow: hidden;
     flex-shrink: 0;
+  }
+  .hero img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 40%;
+    display: block;
+    filter: brightness(0.42) saturate(0.75);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+    background: linear-gradient(180deg, #34d399, #059669);
+    z-index: 2;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(7,12,16,0.05) 0%, rgba(7,12,16,0.7) 100%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 0 14px 10px; z-index: 2;
   }
   .h-eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -47,17 +68,17 @@
   }
   .h-title em { font-style: normal; color: #34d399; }
   .h-sub {
-    font-size: 7.5px; color: rgba(255,255,255,0.5); margin-top: 5px; font-weight: 500;
+    font-size: 7.5px; color: rgba(255,255,255,0.55); margin-top: 4px; font-weight: 500;
   }
   .h-badges {
-    display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;
+    display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap;
   }
   .bdg {
     font-size: 7.5px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
   }
-  .bdg-g { background: #dcfce7; color: #065f46; border: 1px solid #6ee7b7; }
-  .bdg-a { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-  .bdg-i { background: #ede9fe; color: #3730a3; border: 1px solid #a5b4fc; }
+  .bdg-g { background: rgba(52,211,153,0.2); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.4); }
+  .bdg-a { background: rgba(251,191,36,0.2); color: #fcd34d; border: 1px solid rgba(251,191,36,0.4); }
+  .bdg-i { background: rgba(129,140,248,0.2); color: #c7d2fe; border: 1px solid rgba(129,140,248,0.4); }
 
   /* ── BARRE ── */
   .bar { height: 3px; background: linear-gradient(90deg, #34d399, #818cf8, #fbbf24); flex-shrink: 0; }
@@ -176,15 +197,20 @@
 <body>
 <div class="page">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="h-eyebrow">Forum des Métiers · CESI A3 · 2025</div>
-    <div class="h-title">Ingénieur <em>I&amp;V</em></div>
-    <div class="h-sub">Intégration · Vérification · Validation · Qualification</div>
-    <div class="h-badges">
-      <span class="bdg bdg-g">✓ Statut CADRE</span>
-      <span class="bdg bdg-a">33–90k€ / an</span>
-      <span class="bdg bdg-i">Bac +5</span>
+  <!-- HERO PHOTO -->
+  <div class="hero">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=420&q=85"
+         alt="Électronique embarquée">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="h-eyebrow">Forum des Métiers · CESI A3 · 2025</div>
+      <div class="h-title">Ingénieur <em>I&amp;V</em></div>
+      <div class="h-sub">Intégration · Vérification · Validation · Qualification</div>
+      <div class="h-badges">
+        <span class="bdg bdg-g">✓ Statut CADRE</span>
+        <span class="bdg bdg-a">33–90k€ / an</span>
+        <span class="bdg bdg-i">Bac +5</span>
+      </div>
     </div>
   </div>
   <div class="bar"></div>
