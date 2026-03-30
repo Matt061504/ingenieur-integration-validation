@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flyer A5 — Ingénieur Intégration & Validation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0e1a;
+    --surface:  #111827;
+    --surface2: #1a2236;
+    --accent:   #00d4ff;
+    --accent2:  #ff6b35;
+    --accent3:  #a855f7;
+    --green:    #10b981;
+    --text:     #f0f4ff;
+    --muted:    #8892aa;
+    --border:   rgba(255,255,255,0.08);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #070b16;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .page {
+    width: 148mm;
+    min-height: 210mm;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.15), 0 20px 60px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+  }
+
+  /* ── HEADER ──────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, #0d1525 0%, #080d1a 100%);
+    padding: 14px 18px 12px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -50px; right: -50px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.14) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -30px; left: 25%;
+    width: 110px; height: 110px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .h-inner {
+    position: relative; z-index: 1;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+  }
+  .h-label {
+    font-size: 7px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--accent); opacity: 0.75; margin-bottom: 5px;
+  }
+  .h-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px; font-weight: 700; color: var(--text); line-height: 1.15;
+  }
+  .h-title span { color: var(--accent); }
+  .h-sub {
+    font-size: 7.5px; color: var(--muted); margin-top: 4px; letter-spacing: 0.3px;
+  }
+  .h-badges {
+    display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0;
+  }
+  .badge {
+    font-size: 8px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+    white-space: nowrap; letter-spacing: 0.3px;
+  }
+  .bg-green  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+  .bg-blue   { background: rgba(0,212,255,0.12);  color: var(--accent); border: 1px solid rgba(0,212,255,0.25); }
+  .bg-purple { background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
+
+  /* ── GRADIENT BAR ─────────────────────────── */
+  .grad-bar { height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2)); flex-shrink: 0; }
+
+  /* ── BODY ─────────────────────────────────── */
+  .body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+  .s-label {
+    font-size: 7px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+  }
+  .s-label::before {
+    content: ''; display: inline-block; width: 12px; height: 2px;
+    background: var(--accent); border-radius: 2px; flex-shrink: 0;
+  }
+  .s-label.o::before { background: var(--accent2); }
+  .s-label.p::before { background: var(--accent3); }
+  .s-label.g::before { background: var(--green); }
+
+  /* Card */
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .card-b { border-top: 2px solid var(--accent); }
+  .card-o { border-top: 2px solid var(--accent2); }
+  .card-p { border-top: 2px solid var(--accent3); }
+  .card-g { border-top: 2px solid var(--green); }
+
+  .card-h { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+  .cico {
+    width: 22px; height: 22px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0;
+  }
+  .cico-b { background: rgba(0,212,255,0.12); }
+  .cico-o { background: rgba(255,107,53,0.12); }
+  .cico-p { background: rgba(168,85,247,0.12); }
+  .cico-g { background: rgba(16,185,129,0.12); }
+
+  .card h3 {
+    font-size: 11px; font-weight: 700; color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .desc { font-size: 9px; color: rgba(240,244,255,0.65); line-height: 1.6; }
+  .desc strong { color: var(--accent); font-weight: 600; }
+
+  /* 2 cols */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+  .tag {
+    font-size: 8px; padding: 2px 6px; border-radius: 100px;
+    border: 1px solid var(--border); color: var(--muted);
+  }
+  .tag-b { border-color: rgba(0,212,255,0.3); color: var(--accent); background: rgba(0,212,255,0.06); }
+  .tag-o { border-color: rgba(255,107,53,0.3); color: var(--accent2); background: rgba(255,107,53,0.06); }
+  .tag-p { border-color: rgba(168,85,247,0.3); color: #c084fc; background: rgba(168,85,247,0.06); }
+
+  /* Salary bars */
+  .sl-row { margin-bottom: 5px; }
+  .sl-line { display: flex; justify-content: space-between; font-size: 8px; margin-bottom: 2px; color: var(--muted); }
+  .sl-line span:last-child { color: var(--accent); font-weight: 700; font-size: 8.5px; }
+  .bar-bg { background: rgba(255,255,255,0.06); height: 4px; border-radius: 10px; overflow: hidden; }
+  .bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent3)); }
+
+  /* Sectors */
+  .s-grid { display: grid; grid-template-columns: 1fr; gap: 3px; margin-top: 5px; }
+  .s-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 5px; padding: 3px 7px; font-size: 8.5px;
+    color: rgba(240,244,255,0.8); display: flex; align-items: center; gap: 5px;
+  }
+  .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Timeline */
+  .tl { margin-top: 5px; }
+  .tl-row { display: flex; align-items: flex-start; gap: 6px; padding: 2px 0; }
+  .tl-n {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: rgba(0,212,255,0.1); border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7.5px; font-weight: 700; color: var(--accent); flex-shrink: 0;
+  }
+  .tl-n.star { background: rgba(255,107,53,0.1); border-color: var(--accent2); color: var(--accent2); }
+  .tl-t strong { font-size: 9px; color: var(--text); display: block; }
+  .tl-t span { font-size: 7.5px; color: var(--muted); }
+
+  /* ── QR SECTION ─────────────────────────── */
+  .qr-section {
+    background: linear-gradient(135deg, #0d1525 0%, #080d1a 100%);
+    border-top: 1px solid var(--border);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+
+  .qr-wrap {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 7px;
+    box-shadow: 0 0 24px rgba(0,212,255,0.25), 0 0 8px rgba(0,212,255,0.1);
+    flex-shrink: 0;
+  }
+  .qr-wrap img {
+    width: 80px; height: 80px;
+    display: block; border-radius: 4px;
+  }
+
+  .qr-text { flex: 1; }
+  .qr-arrow {
+    font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 5px; opacity: 0.8;
+  }
+  .qr-cta {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .qr-url {
+    font-size: 9px; color: var(--accent); font-weight: 600; margin-bottom: 5px;
+    word-break: break-all;
+  }
+  .qr-sub { font-size: 8px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ───────────────────────────────── */
+  .footer {
+    background: rgba(0,0,0,0.35); border-top: 1px solid var(--border);
+    padding: 7px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 7px; color: var(--muted); flex-shrink: 0;
+  }
+  .footer span { color: var(--accent); }
+
+  /* ── PRINT — fond blanc, économie d'encre ── */
+  @media print {
+    @page { size: A5 portrait; margin: 0; }
+
+    body { background: transparent; padding: 0; display: block; }
+
+    .page {
+      box-shadow: none;
+      width: 148mm; min-height: 210mm;
+      /* Remap toutes les variables en mode clair */
+      --bg:       #ffffff;
+      --surface:  #f8fafc;
+      --surface2: #f1f5f9;
+      --text:     #0f172a;
+      --muted:    #475569;
+      --border:   #e2e8f0;
+      /* Accents conservés mais légèrement assombris pour lisibilité sur blanc */
+      --accent:   #0284c7;
+      --accent2:  #ea580c;
+      --accent3:  #7c3aed;
+      --green:    #059669;
+    }
+
+    /* Header : fond très léger, texte sombre */
+    .header {
+      background: #f0f9ff !important;
+      border-bottom: 2px solid #0284c7;
+    }
+    .header::before, .header::after { display: none; }
+    .h-title { color: #0f172a !important; }
+    .h-title span { color: #0284c7 !important; }
+    .h-label { color: #0284c7 !important; }
+    .h-sub   { color: #475569 !important; }
+
+    /* Badges */
+    .bg-green  { background: #dcfce7 !important; color: #15803d !important; border-color: #86efac !important; }
+    .bg-blue   { background: #e0f2fe !important; color: #0284c7 !important; border-color: #7dd3fc !important; }
+    .bg-purple { background: #f3e8ff !important; color: #7c3aed !important; border-color: #c4b5fd !important; }
+
+    /* Cards */
+    .card { background: #ffffff !important; border-color: #e2e8f0 !important; }
+    .card h3 { color: #0f172a !important; }
+    .desc { color: #334155 !important; }
+    .desc strong { color: #0284c7 !important; }
+
+    /* Tags */
+    .tag-b { background: #e0f2fe !important; color: #0284c7 !important; border-color: #7dd3fc !important; }
+    .tag-o { background: #fff7ed !important; color: #ea580c !important; border-color: #fdba74 !important; }
+    .tag-p { background: #f3e8ff !important; color: #7c3aed !important; border-color: #c4b5fd !important; }
+
+    /* Sectors */
+    .s-item { background: #f8fafc !important; border-color: #e2e8f0 !important; color: #334155 !important; }
+
+    /* Salary bars */
+    .bar-bg { background: #e2e8f0 !important; }
+    .bar    { background: linear-gradient(90deg, #0284c7, #7c3aed) !important; }
+    .sl-line span:last-child { color: #0284c7 !important; }
+
+    /* Timeline */
+    .tl-n { background: #e0f2fe !important; border-color: #0284c7 !important; color: #0284c7 !important; }
+    .tl-n.star { background: #fff7ed !important; border-color: #ea580c !important; color: #ea580c !important; }
+    .tl-t strong { color: #0f172a !important; }
+    .tl-t span   { color: #475569 !important; }
+
+    /* Entreprises badges */
+    .card.card-g span[style] {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+    }
+
+    /* QR section */
+    .qr-section {
+      background: #f0f9ff !important;
+      border-color: #bae6fd !important;
+    }
+    .qr-wrap { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
+    .qr-arrow { color: #0284c7 !important; }
+    .qr-cta   { color: #0f172a !important; }
+    .qr-url   { color: #0284c7 !important; }
+    .qr-sub   { color: #475569 !important; }
+
+    /* Footer */
+    .footer { background: #f8fafc !important; border-color: #e2e8f0 !important; color: #475569 !important; }
+    .footer span { color: #0284c7 !important; }
+
+    /* Section labels */
+    .s-label { color: #475569 !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HEADER ─────────────────────────────── -->
+  <div class="header">
+    <div class="h-inner">
+      <div>
+        <div class="h-label">Forum des Métiers · CESI A3 · 2025</div>
+        <div class="h-title">Ingénieur<br><span>Intégration &amp;</span><br>Validation</div>
+        <div class="h-sub">IVVQ · Intégration · Vérification · Validation · Qualification</div>
+      </div>
+      <div class="h-badges">
+        <div class="badge bg-green">✓ Statut CADRE</div>
+        <div class="badge bg-blue">Bac+5</div>
+        <div class="badge bg-purple">1000+ offres/an</div>
+      </div>
+    </div>
+  </div>
+  <div class="grad-bar"></div>
+
+  <!-- ── BODY ───────────────────────────────── -->
+  <div class="body">
+
+    <!-- Description -->
+    <div class="card card-b">
+      <div class="card-h">
+        <div class="cico cico-b">🔬</div>
+        <h3>Description du Métier</h3>
+      </div>
+      <p class="desc">Intègre les composants HW &amp; SW d'un système, puis <strong>vérifie et valide leur conformité</strong> aux exigences avant livraison. Verrou qualité indispensable dans les secteurs critiques (aéro, défense, auto, médical…).</p>
+    </div>
+
+    <!-- Compétences + Secteurs -->
+    <div class="two-col">
+      <div class="card card-b">
+        <div class="s-label">Compétences</div>
+        <div class="tags">
+          <span class="tag tag-b">Python</span>
+          <span class="tag tag-b">C / C++</span>
+          <span class="tag tag-b">Robot FW</span>
+          <span class="tag tag-b">Jenkins</span>
+          <span class="tag tag-b">IBM DOORS</span>
+          <span class="tag tag-b">Git</span>
+        </div>
+        <div class="tags" style="margin-top:4px;">
+          <span class="tag tag-p">ISTQB</span>
+          <span class="tag tag-o">DO-178C</span>
+          <span class="tag tag-o">ISO 26262</span>
+          <span class="tag tag-o">ECSS</span>
+        </div>
+      </div>
+      <div class="card card-o">
+        <div class="s-label o">Secteurs</div>
+        <div class="s-grid">
+          <div class="s-item"><span class="dot" style="background:#00d4ff"></span>Aéronautique / Spatial</div>
+          <div class="s-item"><span class="dot" style="background:#ef4444"></span>Défense / Militaire</div>
+          <div class="s-item"><span class="dot" style="background:#8b5cf6"></span>Automobile / ADAS</div>
+          <div class="s-item"><span class="dot" style="background:#10b981"></span>Ferroviaire</div>
+          <div class="s-item"><span class="dot" style="background:#f59e0b"></span>Nucléaire / Médical</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salaires + Évolution -->
+    <div class="two-col">
+      <div class="card card-g">
+        <div class="s-label g">Rémunération</div>
+        <div class="sl-row">
+          <div class="sl-line"><span>Junior (0–3 ans)</span><span>33–42k€</span></div>
+          <div class="bar-bg"><div class="bar" style="width:38%"></div></div>
+        </div>
+        <div class="sl-row">
+          <div class="sl-line"><span>Confirmé (3–7 ans)</span><span>42–55k€</span></div>
+          <div class="bar-bg"><div class="bar" style="width:58%"></div></div>
+        </div>
+        <div class="sl-row">
+          <div class="sl-line"><span>Senior (7–15 ans)</span><span>55–70k€</span></div>
+          <div class="bar-bg"><div class="bar" style="width:76%"></div></div>
+        </div>
+        <div class="sl-row">
+          <div class="sl-line"><span>Expert (15 ans+)</span><span>70–90k€+</span></div>
+          <div class="bar-bg"><div class="bar" style="width:100%"></div></div>
+        </div>
+        <p style="font-size:7.5px;color:var(--muted);margin-top:5px;">+15% Île-de-France · +10% défense</p>
+      </div>
+      <div class="card card-p">
+        <div class="s-label p">Évolution</div>
+        <div class="tl">
+          <div class="tl-row">
+            <div class="tl-n">1</div>
+            <div class="tl-t"><strong>Junior</strong><span>Exécution des tests</span></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-n">2</div>
+            <div class="tl-t"><strong>Confirmé / Senior</strong><span>Pilotage campagnes</span></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-n">3</div>
+            <div class="tl-t"><strong>Lead I&amp;V</strong><span>Encadrement équipe</span></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-n star">★</div>
+            <div class="tl-t"><strong>Expert / DT</strong><span>Management stratégique</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entreprises -->
+    <div class="card card-g" style="padding:9px 12px;">
+      <div class="s-label g" style="margin-bottom:5px;">Principales Entreprises Recruteuses</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Airbus</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Thales</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Safran</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Dassault</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Alstom</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">ALTEN</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Expleo</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Capgemini Eng.</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">SII Group</span>
+        <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:8.5px;color:rgba(240,244,255,0.8);">Valeo</span>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- ── QR CODE ────────────────────────────── -->
+  <div class="qr-section">
+    <div class="qr-wrap">
+      <!-- 600x600px pour qualité impression, affiché en 80px CSS ≈ 21mm imprimé -->
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://ingenieur-integration.vercel.app/&color=0a0e1a&bgcolor=ffffff&margin=2"
+           alt="QR Code — ingenieur-integration.vercel.app">
+    </div>
+    <div class="qr-text">
+      <div class="qr-arrow">← Scannez pour tout voir</div>
+      <div class="qr-cta">Poster interactif<br>en ligne</div>
+      <div class="qr-url">ingenieur-integration.vercel.app</div>
+      <div class="qr-sub">Toutes les informations détaillées<br>cycle en V · ODD · sources</div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────── -->
+  <div class="footer">
+    <div>Ingénieur <span>I&amp;V</span> · Forum des Métiers CESI 2025</div>
+    <div>Sources : APEC · Silkhom · ALTEN · Journal du Net · 2024–2025</div>
+  </div>
+
+</div>
+</body>
+</html>
